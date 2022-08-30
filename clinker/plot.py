@@ -109,10 +109,14 @@ def save_html(data, output):
         fp.write(html)
 
 
-def plot_clusters(clusters, output=None, use_file_order=False):
-    """Generates clinker plot from a collection of Synthase objects."""
-    data = clusters.to_data(use_file_order=use_file_order)
-    plot_data(data, output=output)
+def plot_clusters(clusters, json_file, output=None, use_file_order=False):
+	"""Generates clinker plot from a collection of Synthase objects."""
+	data = clusters.to_data(use_file_order=use_file_order)
+	json_object = json.dumps(data)
+	with open(json_file, "w") as outfile:
+		outfile.write(json_object)
+	LOG.info("Wrote plottable json to " + str(json_file))
+	plot_data(data, output=output)
 
 
 def plot_data(data, output=None):
