@@ -21,7 +21,7 @@ import numpy as np
 from scipy.cluster import hierarchy
 from scipy.spatial.distance import squareform
 
-from Bio import Align
+from Bio import Align, __version__ as biopython_version
 from Bio.Align import substitution_matrices
 
 from disjoint_set import DisjointSet
@@ -111,7 +111,12 @@ def compare_pairs(one, two):
 def compute_identity(alignment):
     """Calculates sequence identity/similarity of a BioPython alignment object."""
     # Aligned strings aren't stored separately, have to split
-    one, _, two, _ = str(alignment).split("\n")
+    if biopython_version >= "1.80":
+        # Default format changed as of BioPython v1.80
+        # https://github.com/biopython/biopython/issues/4183
+        one, two = alignment
+    else:
+        one, _, two, _ = str(alignment).split("\n")
     length = len(one)
 
     # Amino acid similarity groups
